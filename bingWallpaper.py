@@ -4,19 +4,19 @@ import win32api, win32con, win32gui
 
 BASE_URL='https://cn.bing.com'
 API='https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN'
-CMD = False # 设置为 Ture 后将日志输出到终端
+CMD = False
 
 def log( msg:str ):
     if(CMD):
         print( msg )
     else:
-        with open('./bingWallpaper.log', mode='a+') as f:
+        with open('D:/Documents/soft/bingWallpaper/bingWallpaper.log', mode='a+') as f:
             data = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             f.write('[ %s ] : %s \n'%(data, msg))
             f.close()
 def getFileName()->str:
     name = time.strftime("%Y-%m-%d", time.localtime())
-    file_name = 'C:/Users/' + getpass.getuser() + '/Pictures/' + name + '.png'
+    file_name = 'D:/Pictures/bingWallpaper/' + name + '.png'
     return file_name
 
 def getUrl()->str:
@@ -35,7 +35,6 @@ def saveImage(url:str)->str:
         f.close()
     return file_name
 
-
 def setWallPaper(pic:str):
    # open register
    regKey = win32api.RegOpenKeyEx(win32con.HKEY_CURRENT_USER,"Control Panel\\Desktop",0,win32con.KEY_SET_VALUE)
@@ -48,6 +47,7 @@ def setWallPaper(pic:str):
 file_name = getFileName()
 if(os.path.exists(file_name)):
     log('今天已经设置过壁纸，跳过设置')
+    setWallPaper(file_name)
     exit()
 saveImage(getUrl())
 setWallPaper(file_name)
